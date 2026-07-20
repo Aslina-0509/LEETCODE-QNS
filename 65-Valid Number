@@ -1,0 +1,45 @@
+class Solution {
+    public boolean isNumber(String s) {
+        boolean seenDigit = false;
+        boolean seenDot = false;
+        boolean seenExponent = false;
+        boolean digitAfterExponent = true;
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            if (Character.isDigit(ch)) {
+                seenDigit = true;
+                digitAfterExponent = true;
+            }
+            else if (ch == '+' || ch == '-') {
+                // Sign is allowed only at the beginning
+                // or immediately after 'e' or 'E'
+                if (i != 0 && s.charAt(i - 1) != 'e' && s.charAt(i - 1) != 'E') {
+                    return false;
+                }
+            }
+            else if (ch == '.') {
+                // Dot is allowed only once and before exponent
+                if (seenDot || seenExponent) {
+                    return false;
+                }
+                seenDot = true;
+            }
+            else if (ch == 'e' || ch == 'E') {
+                // Exponent should appear only once
+                // and only after at least one digit
+                if (seenExponent || !seenDigit) {
+                    return false;
+                }
+                seenExponent = true;
+                digitAfterExponent = false;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return seenDigit && digitAfterExponent;
+    }
+}
